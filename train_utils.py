@@ -14,6 +14,11 @@ import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
 
+try:
+    unicode  # type: ignore[name-defined]
+except NameError:
+    unicode = str  # Python 3: 'str' is already Unicode
+
 # quantitative eval
 def accuracy(model, data):
     mean_acc = 0 ; trials = max(1, int(500/model.batch_size))
@@ -28,7 +33,8 @@ def accuracy(model, data):
 # qualitative eval
 def sample(model, data, FLAGS):
     model.reset_states()
-    key = unicode("KEY", "utf-8") ; plaintext = unicode("YOUKNOWNOTHINGJONSNOW", "utf-8")
+    key = "KEY"
+    plaintext = "YOUKNOWNOTHINGJONSNOW"
     ciphertext = key + '-'*(data.key_len - len(key)) + data.encode(key, plaintext)
     decoded = ''
     for i in range(len(ciphertext)):

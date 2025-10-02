@@ -9,25 +9,29 @@ import os
 
 from stacked_rnn import StackedRNN
 
+tf.compat.v1.compat.v1.disable_eager_execution()
+
 MEM_SIZES = [3000,1024,512] # use for enigma
 #MEM_SIZES = [32, 64, 128, 256, 512] # use for vigenere and autokey ciphers
 
-tf.app.flags.DEFINE_bool("train", True, "Run the train loop (else eval model)")
-tf.app.flags.DEFINE_bool("vary_mem", False, "Train this model repeatedly for different memory sizes")
-tf.app.flags.DEFINE_integer("key_len", 6, "Maximum length of key for encoding/decoding message")
-tf.app.flags.DEFINE_integer("tsteps", 20, "Number of timesteps for backpropagation")
-tf.app.flags.DEFINE_integer("rnn_size", 256, "Number of hidden units in the rnn")
-tf.app.flags.DEFINE_integer("ncells", 1, "Number of recurrent cells to stack")
-tf.app.flags.DEFINE_integer("batch_size", 50, "Size of batch in minibatch gradient descent")
-tf.app.flags.DEFINE_integer("save_every", 5000, "Save model after this number of train steps")
-tf.app.flags.DEFINE_integer("total_steps", 250000, "Total number of training steps")
-tf.app.flags.DEFINE_integer("print_every", 100, "Print training info after this number of train steps")
-tf.app.flags.DEFINE_integer("acc_every", 500, "Print/save accuracy info after this number of train steps")
-tf.app.flags.DEFINE_float("dropout", 1.0, "Dropout for the last (full-connected) layer")
-tf.app.flags.DEFINE_float("lr", 5e-4, "Learning rate (alpha) for the model")
-tf.app.flags.DEFINE_string("cipher", "vigenere", 'Type of cipher to solve. One of "vigenere", "autokey", or "enigma"')
-tf.app.flags.DEFINE_string("A", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "Alphabet to use for polyalphabetic cipher")
-FLAGS = tf.app.flags.FLAGS
+tf.compat.v1.app.flags.DEFINE_bool("train", True, "Run the train loop (else eval model)")
+tf.compat.v1.app.flags.DEFINE_bool("vary_mem", False, "Train this model repeatedly for different memory sizes")
+tf.compat.v1.app.flags.DEFINE_integer("key_len", 6, "Maximum length of key for encoding/decoding message")
+tf.compat.v1.app.flags.DEFINE_integer("tsteps", 20, "Number of timesteps for backpropagation")
+tf.compat.v1.app.flags.DEFINE_integer("rnn_size", 256, "Number of hidden units in the rnn")
+tf.compat.v1.app.flags.DEFINE_integer("ncells", 1, "Number of recurrent cells to stack")
+tf.compat.v1.app.flags.DEFINE_integer("batch_size", 50, "Size of batch in minibatch gradient descent")
+tf.compat.v1.app.flags.DEFINE_integer("save_every", 5000, "Save model after this number of train steps")
+tf.compat.v1.app.flags.DEFINE_integer("total_steps", 250000, "Total number of training steps")
+tf.compat.v1.app.flags.DEFINE_integer("print_every", 100, "Print training info after this number of train steps")
+tf.compat.v1.app.flags.DEFINE_integer("acc_every", 500, "Print/save accuracy info after this number of train steps")
+tf.compat.v1.app.flags.DEFINE_float("dropout", 1.0, "Dropout for the last (full-connected) layer")
+tf.compat.v1.app.flags.DEFINE_float("lr", 5e-4, "Learning rate (alpha) for the model")
+tf.compat.v1.app.flags.DEFINE_string("cipher", "vigenere", 'Type of cipher to solve. One of "vigenere", "autokey", or "enigma"')
+tf.compat.v1.app.flags.DEFINE_string("A", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "Alphabet to use for polyalphabetic cipher")
+tf.compat.v1.app.flags.DEFINE_string("meta_dir", "", "Directory to save loss history, figures, etc.")
+tf.compat.v1.app.flags.DEFINE_string("save_dir", "", "Directory to save model checkpoints")
+FLAGS = tf.compat.v1.app.flags.FLAGS
 
 ##### interpret user input #####
 ciphers = ["vigenere", "autokey", "enigma", "crack-vigenere", "crack-autokey"]

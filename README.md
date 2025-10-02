@@ -35,7 +35,13 @@ A new **Dockerfile** is included to run this environment.
 ### Build the Docker image
 
 ```bash
-docker build --platform=linux/arm64 -t crypto-rnn-tf220 . --load
+docker build -t crypto-rnn-tf220 . --load
+```
+
+If using Mac with Apple Silicon, specify architecture when building:
+
+```bash
+docker build --platform=linux/amd64 -t crypto-rnn-tf220 . --load
 ```
 
 ### Run the container (from the project root)
@@ -44,8 +50,8 @@ docker build --platform=linux/arm64 -t crypto-rnn-tf220 . --load
 docker run --rm -it -v "$PWD:/app" crypto-rnn-tf220
 ```
 
-* If using Windows PowerShell: `docker run --platform=linux/amd64 -it --rm -v ${PWD}:/app crypto-rnn-tf220`
-* If using Windows CMD: `docker run --platform=linux/amd64 -it --rm -v %cd%:/app crypto-rnn-tf220`
+* If using Windows PowerShell: `docker run -it --rm -v ${PWD}:/app crypto-rnn-tf220`
+* If using Windows CMD: `docker run -it --rm -v %cd%:/app crypto-rnn-tf220`
 
 ### Train (example: Vigenère)
 

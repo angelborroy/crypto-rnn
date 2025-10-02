@@ -44,6 +44,9 @@ docker build --platform=linux/amd64 -t crypto-rnn-tf11 . --load
 docker run --platform=linux/amd64 -it --rm -v "$(pwd)":/app crypto-rnn-tf11
 ```
 
+* If using Windows PowerShell: `docker run --platform=linux/amd64 -it --rm -v ${PWD}:/app crypto-rnn-tf11`
+* If using Windows CMD: `docker run --platform=linux/amd64 -it --rm -v %cd%:/app crypto-rnn-tf11`
+
 ### Train (example: Vigenère)
 
 ```bash

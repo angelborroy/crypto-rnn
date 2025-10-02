@@ -23,3 +23,52 @@ Dependencies
 * All code is written in Python 3.6 and TensorFlow 1.1. You will need:
  * NumPy
  * [TensorFlow](https://www.tensorflow.org/install/)
+
+---
+
+## Modifications from the Original Work
+
+This branch, **`tf-1.1`**, is intended to replicate the original environment (Python 2.7 and TensorFlow 1.1).
+
+A new **Dockerfile** is included to run this environment.
+
+### Build the Docker image
+
+```bash
+docker build --platform=linux/amd64 -t crypto-rnn-tf11 . --load
+```
+
+### Run the container (from the project root)
+
+```bash
+docker run --platform=linux/amd64 -it --rm -v "$(pwd)":/app crypto-rnn-tf11
+```
+
+### Train (example: Vigenère)
+
+```bash
+python main.py --cipher vigenere --total_steps 1000 --rnn_size 256 --tsteps 20 \
+  --acc_every 500 --lr 5e-4 --batch_size 50 --key_len 6
+```
+
+Training artifacts are written to the `meta/` and `save/` directories.
+
+### Summarize results
+
+A helper script is provided to summarize a run:
+
+```bash
+python summarize_stats.py
+```
+
+Example output:
+
+```json
+{
+  "total_training_time_seconds": 42.791638135909196,
+  "avg_time_per_step": 0.042791638135909194,
+  "final_accuracy": 3.97142857143,
+  "final_loss": 33.9341491461,
+  "total_steps": 1000
+}
+```

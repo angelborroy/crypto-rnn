@@ -44,8 +44,8 @@ docker build --platform=linux/arm64 -t crypto-rnn-tf220 . --load
 docker run --rm -it -v "$PWD:/app" crypto-rnn-tf220
 ```
 
-* If using Windows PowerShell: `docker run --platform=linux/amd64 -it --rm -v ${PWD}:/app crypto-rnn-tf11`
-* If using Windows CMD: `docker run --platform=linux/amd64 -it --rm -v %cd%:/app crypto-rnn-tf11`
+* If using Windows PowerShell: `docker run --platform=linux/amd64 -it --rm -v ${PWD}:/app crypto-rnn-tf220`
+* If using Windows CMD: `docker run --platform=linux/amd64 -it --rm -v %cd%:/app crypto-rnn-tf220`
 
 ### Train (example: Vigenère)
 

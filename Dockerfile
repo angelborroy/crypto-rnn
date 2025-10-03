@@ -25,6 +25,13 @@ RUN pip install --no-cache-dir \
     numpy==1.12.1 \
     matplotlib==2.0.0
 
+# --- crypto-enigma (Py2.7) from source ---
+RUN pip install 'enum34<2' 'cachetools<4'
+RUN git clone --depth=1 https://github.com/orome/crypto-enigma-py.git /opt/crypto-enigma \
+ && cd /opt/crypto-enigma \
+ && python setup.py install \
+ && cd / && rm -rf /opt/crypto-enigma    
+
 # Set working directory
 WORKDIR /app
 

@@ -2,6 +2,7 @@
 # Sam Greydanus. January 2017. MIT License.
 
 import copy
+import codecs
 from crypto_enigma import *
 import numpy as np
 
@@ -19,7 +20,7 @@ class Enigma():
         self.wordlen = tsteps - self.key_len
     
     def encode(self, key, text):
-        key = key.decode('unicode-escape')
+        key = codecs.decode(key, 'unicode_escape')
         enigma = EnigmaConfig.config_enigma(rotor_names=u"A-I-II-III", window_letters=key, \
                                  plugs=u"", rings=u"02.14.08")
         return enigma.enigma_encoding(text)
@@ -38,7 +39,7 @@ class Enigma():
     def next_batch(self, batch_size, verbose=False):
         batch_X = [] ; batch_y = [] ; batch_Xs = [] ; batch_ks = [] ; batch_ys = []
         for _ in range(batch_size):
-            ys = self.rands(self.wordlen).decode('unicode-escape')
+            ys = codecs.decode(self.rands(self.wordlen), 'unicode_escape')
             ks = self.rands(3)
 
             # lets us check for overfitting later

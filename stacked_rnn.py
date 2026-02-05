@@ -32,7 +32,7 @@ class StackedRNN:
         self.tsteps     = FLAGS.tsteps
         self.xlen       = 27  # alphabet size used in original code
         self.ylen       = 27
-        self.num_layers = getattr(FLAGS, "num_layers", 1)
+        self.num_layers = getattr(FLAGS, "ncells", 1)
 
         # ---------------------------
         # Placeholders (TF1 style)

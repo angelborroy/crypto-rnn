@@ -42,13 +42,14 @@ class StackedRNN:
 
         # ---------------------------
         # Build stacked LSTMs with Keras layers (Keras 3 compatible)
-        init = keras.initializers.TruncatedNormal(stddev=0.1)  # dtype passed at call sites
+        rnn_init = keras.initializers.TruncatedNormal(stddev=0.075)
         self.rnn_layers = [
             keras.layers.LSTM(
                 units=self.rnn_size,
                 return_sequences=True,
                 return_state=True,
-                kernel_initializer=init,
+                kernel_initializer=rnn_init,
+                recurrent_initializer=rnn_init,
                 name=f"lstm_{i}",
             )
             for i in range(self.num_layers)
@@ -79,23 +80,18 @@ class StackedRNN:
                     stddev=1.0 / np.sqrt(self.rnn_size), dtype=tf.float32
                 ),
             )
-            b = tf.compat.v1.get_variable(
-                "b_out",
-                shape=[self.ylen],
-                initializer=tf.compat.v1.constant_initializer(0.0),
-            )
 
         BT = tf.shape(outputs)[0] * tf.shape(outputs)[1]
         H  = tf.shape(outputs)[2]
         flat = tf.reshape(outputs, [BT, H])
-        logits_flat = tf.matmul(flat, W) + b
+        logits_flat = tf.matmul(flat, W)
         self.logits = tf.reshape(logits_flat, [-1, self.tsteps, self.ylen], name="logits")
         self.y = tf.nn.softmax(self.logits, name="y_softmax")
 
         # ---------------------------
         # Loss + Optimizer (TF1 style)
-        loss_t = tf.nn.softmax_cross_entropy_with_logits(labels=self.y_, logits=self.logits)
-        self.loss = tf.reduce_mean(loss_t, name="loss")
+        # Loss: L2 on softmax probabilities (matching original TF1.1)
+        self.loss = tf.nn.l2_loss(self.y_ - self.y) / (tf.cast(tf.shape(self.x)[0], tf.float32) * self.tsteps)
         opt = tf.compat.v1.train.AdamOptimizer(self.FLAGS.lr)
         self.train_op = opt.minimize(self.loss)
 
@@ -120,7 +116,7 @@ class StackedRNN:
 
         # Readout for the last timestep of the step graph: [B, H] -> [B, ylen]
         last_h = seq[:, -1, :]                       # [B, H]
-        logits_step = tf.matmul(last_h, W) + b       # reuse W, b
+        logits_step = tf.matmul(last_h, W)       # reuse W
         self.y_step = tf.nn.softmax(logits_step, name="y_step")
 
         # Python-side cache of current recurrent state for sampling
